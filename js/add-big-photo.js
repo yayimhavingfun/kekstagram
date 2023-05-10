@@ -1,18 +1,23 @@
+const COMMENTS_STEP = 5;
+
 const bigPicture = document.querySelector('.big-picture');
 const body = document.querySelector('body');
 const bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
 
 //hide excess stuff
-const commentsCount = bigPicture.querySelector('.social__comment-count');
+const commentCount = bigPicture.querySelector('.social__comment-count');
 const commentsLoader = bigPicture.querySelector('.comments-loader');
-commentsCount.classList.add('hidden');
-commentsLoader.classList.add('hidden');
+
+let commentsLoaded = [];
+let commentsCount = COMMENTS_STEP;
 
 const onBigPictureCloseClick = function () {
   bigPicture.classList.add('hidden');
   body.classList.remove('modal-open');
   bigPictureClose.removeEventListener('click', onBigPictureCloseClick);
   commentList.innerHTML = '';
+  commentsCount = COMMENTS_STEP;
+  commentsLoaded = [];
 };
 
 //display comments
@@ -24,19 +29,37 @@ const renderComment = function (comment) {
   const similarComment = commentTemplate.cloneNode(true);
 
   similarComment.querySelector('.social__picture').src = comment.avatar;
-  similarComment.querySelector('.social__picture').alt = comment.alt;
+  similarComment.querySelector('.social__picture').alt = comment.name;
   similarComment.querySelector('.social__text').textContent = comment.message;
 
   return similarComment;
 };
 
 const renderCommentsFragments = function (comments) {
+  const onLoaderClick = () => {
+    renderCommentsFragments(comments);
+  }
+
+  commentsCount = (comments.length < COMMENTS_STEP) ? comments.length : commentsCount;
+  commentsLoaded = comments.slice(0, commentsCount);
+
+  commentList.innerHTML = '';
+  commentCount.textContent = `${commentsLoaded.length} из ${comments.length} комментариев`;
+
   let commentsListFragment = document.createDocumentFragment();
-  comments.forEach( comment => {
+  commentsLoaded.forEach(comment => {
     commentsListFragment.appendChild(renderComment(comment));
   });
-
   commentList.appendChild(commentsListFragment);
+
+  if (comments.length > COMMENTS_STEP && commentsLoaded.length < comments.length) {
+    commentsLoader.classList.remove('hidden');
+    commentsLoader.addEventListener('click', onLoaderClick);
+  } else {
+    commentsLoader.classList.add('hidden');
+  }
+
+  commentsCount += COMMENTS_STEP;
 }
 
 //display big picture

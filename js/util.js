@@ -21,4 +21,31 @@ const getRandomElementArr = (array) => {
   return array[getRandomInt(0, array.length - 1)];
 }
 
-export { getRandomInt, checkString, getRandomElementArr}
+// shuffles an array
+const shuffleArray = (arr) => {
+  let j, temp;
+  for (let i = arr.length - 1; i > 0; i--) {
+    j = Math.floor(Math.random() * (i + 1));
+    temp = arr[j];
+    arr[j] = arr[i];
+    arr[i] = temp;
+  }
+  return arr;
+}
+
+const debounce = (cb) => {
+  const DEBOUNCE_INTERVAL = 500
+
+  let lastTimeout = null;
+
+  return (...args) => {
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    lastTimeout = window.setTimeout(() => {
+      cb(...args);
+    }, DEBOUNCE_INTERVAL);
+  };
+}
+export { getRandomInt, checkString, getRandomElementArr, shuffleArray, debounce }
+
