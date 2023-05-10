@@ -1,4 +1,6 @@
 import {effectLevel, lastClass} from './effects.js';
+import {showError, showSuccess} from './alert.js';
+import {request} from './fetch.js';
 
 const Keys = {
   ESC: 'Esc',
@@ -87,3 +89,21 @@ buttonMinus.addEventListener('click', () => {
   scale = scale / 100;
   imagePreview.style.transform = 'scale(' + scale + ')';
 });
+
+const imgUploadForm = document.querySelector('.img-upload__form');
+
+const onSuccess = () => {
+  showSuccess('Фотография загружена!');
+  imgUploadForm.reset();
+  closeModal();
+}
+
+const onError = () => {
+  showError('Что-то пошло не так', 'Попробовать еще раз')
+}
+
+imgUploadForm.addEventListener('submit',(evt) => {
+  evt.preventDefault();
+
+  request(onSuccess, onError, 'POST', new FormData(evt.target));
+})
