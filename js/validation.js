@@ -25,10 +25,11 @@ inputHashtag.addEventListener('input', () => {
   const startNotHashtag = inputArray.some((symbol) => {
     return symbol[0] !== '#';
   });
-  if (startNotHashtag) {
-    inputHashtag.setCustomValidity('Хэш-тег начинается с символа #');
+  if (!inputArray.empty) {
+    if (startNotHashtag) {
+      inputHashtag.setCustomValidity('Хэш-тег начинается с символа #');
+    }
   }
-
   const isHashtagLong = inputArray.some((item) => {
     return item.length > MAX_SYMBOLS;
   });

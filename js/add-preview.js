@@ -1,4 +1,3 @@
-import {photos} from './data.js';
 import {showPicture} from './add-big-photo.js';
 
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -18,7 +17,7 @@ const renderPhotos = function (picture) {
   return preview;
 }
 
-const renderPhotosFragments = function () {
+const renderPhotosFragments = (photos) => {
   let picturesListFragment = document.createDocumentFragment();
 
   photos.forEach((photo) => {
